@@ -1,7 +1,7 @@
 const brain = require('brain.js');
 
 const network = new brain.NeuralNetwork({
-    hiddenLayers:[1]
+    hiddenLayers:[0]
 });
 
 const data = [
@@ -17,10 +17,10 @@ network.train (data, {
     //log: (error) => console.log (error)
 });
 
-
-console.log (network.run([1,0,0]))
-console.log (network.run([0,1,0]))
-
 console.log (JSON.stringify(network.toJSON()))
-console.log (network.toJSON().layers)
+
+
+//console.log (network.run([1,0,0]))
+//console.log (network.run([0,1,0]))
+
 

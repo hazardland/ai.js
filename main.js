@@ -1,3 +1,10 @@
+//So Perceptron is some fucking term which describes a simpliest entity of neural network
+//Of courese it has input layer but has one output (many perceptrons togather are called neural networks)
+//In case of neural network output of the perceptron is one input for other peceptron
+//input[i]*layer[]
+//https://towardsdatascience.com/what-the-hell-is-perceptron-626217814f53
+
+
 function Network (layers)
 {
     this.layers = {};
@@ -5,6 +12,10 @@ function Network (layers)
     {
         this.layers[layer] = new Layer(layers[layer]);
     }
+}
+Network.prototype.input = function (input)
+{
+
 }
 function Layer(neurons){
     function weight ()
@@ -17,10 +28,13 @@ function Layer(neurons){
     for (let neuron=0; neuron<neurons; neuron++)
     {
         this.weights[neuron] = weight();
-    }  
+    }
+}
+//here input is single number
+Layer.prototype.output = function (input)
+{
+
 }
 
-
-
-const brain = new Network([2,3,1]);
+const brain = new Network([2,1]);
 console.log (brain);
