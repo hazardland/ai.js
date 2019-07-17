@@ -34,16 +34,15 @@ Layer.prototype.output = function (input)
 
 function Neuron (layer)
 {
-    function weight ()
+    this.value = 0;
+    if (layer)
     {
-        //returns random number between -1 and 1
-        return Math.random()*(Math.ceil(Math.random()*2)==1?1:-1);
-    }    
-    this.bias = weight();
-    this.weights = {};
-    for (let position=0; position<layer.length; position++)
-    {
-        this.weights[position] = weight();
+        this.bias = 1;
+        this.weights = {};
+        for (let position=0; position<layer.length; position++)
+        {
+            this.weights[position] = Math.random()*(Math.ceil(Math.random()*2)==1?1:-1);
+        }
     }
 
 }
