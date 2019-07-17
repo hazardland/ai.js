@@ -1,1 +1,0 @@
-console.log ( Math.random()*(Math.ceil(Math.random()*2)==1?1:-1) )

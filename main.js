@@ -3,7 +3,7 @@
 //In case of neural network output of the perceptron is one input for other peceptron
 //input[i]*layer[]
 //https://towardsdatascience.com/what-the-hell-is-perceptron-626217814f53
-
+//https://www.youtube.com/watch?v=tIeHLnjs5U8
 
 function Network (layers)
 {
@@ -18,11 +18,7 @@ Network.prototype.input = function (input)
 
 }
 function Layer(neurons){
-    function weight ()
-    {
-        //returns random number between -1 and 1
-        return Math.random()*(Math.ceil(Math.random()*2)==1?1:-1);
-    }
+
     this.bias = weight()
     this.weights = {};
     for (let neuron=0; neuron<neurons; neuron++)
@@ -36,5 +32,20 @@ Layer.prototype.output = function (input)
 
 }
 
+function Neuron (layer)
+{
+    function weight ()
+    {
+        //returns random number between -1 and 1
+        return Math.random()*(Math.ceil(Math.random()*2)==1?1:-1);
+    }    
+    this.bias = weight();
+    this.weights = {};
+    for (let position=0; position<layer.length; position++)
+    {
+        this.weights[position] = weight();
+    }
+
+}
 const brain = new Network([2,1]);
 console.log (brain);

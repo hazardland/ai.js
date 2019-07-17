@@ -1,7 +1,7 @@
 const brain = require('brain.js');
 
 const network = new brain.NeuralNetwork({
-    hiddenLayers:[0]
+    //hiddenLayers:[3]
 });
 
 const data = [
