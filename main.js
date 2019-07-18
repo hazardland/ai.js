@@ -7,29 +7,35 @@
 
 function Network (layers)
 {
-    this.layers = {};
+    this.layers = [];
     for (let layer=0; layer<layers.length; layer++)
     {
-        this.layers[layer] = new Layer(layers[layer]);
+        this.layers[layer] = [];
+        for (let neuron=0; neuron<layers[layer]; neuron++)
+        {
+            this.layers[layer][neuron] = new Neuron((layer>0)?this.layers[layer-1]:null);
+        }
     }
 }
-Network.prototype.input = function (input)
+Network.prototype.result = function (input)
 {
-
-}
-function Layer(neurons){
-
-    this.bias = weight()
-    this.weights = {};
-    for (let neuron=0; neuron<neurons; neuron++)
+    for (let neuron=0; neuron<this.layers[0].length; neuron++)
     {
-        this.weights[neuron] = weight();
+        this.layers[0][neuron].value = input[neuron];
     }
-}
-//here input is single number
-Layer.prototype.output = function (input)
-{
-
+    for (let layer=1;layer<this.layers.length;layer++)
+    {
+        for (let neuron=0; neuron<this.layers[layer].length; neuron++)
+        {
+            this.layers[layer][neuron].result(this.layers[layer-1]);
+        }
+    }
+    result = [];
+    for (let neuron=0; neuron<this.layers[this.layers.length-1].length; neuron++)
+    {
+        result[neuron] = this.layers[this.layers.length-1][neuron].value;
+    }
+    return result;
 }
 
 function Neuron (layer)
@@ -46,5 +52,66 @@ function Neuron (layer)
     }
 
 }
-const brain = new Network([2,1]);
-console.log (brain);
+Neuron.prototype.result = function result (layer)
+{
+    this.value = this.bias;
+    for (let neuron=0;neuron<layer.length;neuron++)
+    {
+        this.value += layer[neuron].value*this.weights[neuron];
+    }
+    this.value = 1/(1+Math.pow(Math.E, -this.value));
+}
+
+function World (width, height, scale)
+{
+    this.scale = scale;
+    this.witdh = width;
+    this.height = height;
+    this.map = [];
+    for (let x=0; x<width; x++)
+    {
+        this.map[x] = [];
+        for (let y=0; y<height; y++)
+        {
+            result = Math.floor(Math.random() * 200);
+            this.map[x][y] = result>2?0:result;
+
+        }
+    }
+}
+World.prototype.draw = function (board)
+{
+    for (let x=0; x<this.map.length; x++)
+    {
+        for (let y=0; y<this.map[x].length; y++)
+        {
+            if (this.map[x][y]>0)
+            {
+                if (this.map[x][y]==1)
+                {
+                    board.fillStyle = "#4b7a2a";
+                }
+                else if (this.map[x][y]==2)
+                {
+                    board.fillStyle = "#ff0000";
+                }
+                board.fillRect(x*10,y*10,10,10);
+            }
+        }
+    }
+
+}
+
+function Food()
+{
+
+}
+
+function Body ()
+{
+    this.brain = new Network([4,6,4]);
+    this.energy = 10;
+}
+
+const brain = new Network([4,6,2]);
+console.log (brain.result ([1,5,3,4]));

@@ -1,1 +1,10 @@
+<canvas id="board" width="1200" height="600" style="border:1px solid #000000;background-color:#000000">
+
+</canvas>
 <script src="./main.js"></script>
+<script>
+var canvas = document.getElementById("board");
+var board = canvas.getContext("2d");
+var world = new World(1200,600,10);
+world.draw(board);
+</script>
