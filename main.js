@@ -60,26 +60,36 @@ Neuron.prototype.result = function result (layer)
     this.value = 1/(1+Math.pow(Math.E, -this.value));
 }
 
-Network.prototype.mutate = function (input)
+Network.prototype.mutate = function ()
 {
+    //create clone
+    let structure = [];
+    for (let layer=0;layer<this.layers.length;layer++)
+    {
+        structure[layer] = this.layers[layer].length;
+    }
+    let clone = new Network(structure);
+    //copy neurons
     for (let layer=1;layer<this.layers.length;layer++)
     {
         for (let neuron=0; neuron<this.layers[layer].length; neuron++)
         {
-            this.layers[layer][neuron].mutate();
+            clone.layers[layer][neuron].mutate(this.layers[layer][neuron]);
         }
     }
+    return clone;
 }
-Neuron.prototype.mutate = function ()
+Neuron.prototype.mutate = function (parent)
 {
     for (let i=0;i<this.weights.length;i++)
     {
-        this.weights[i] = this.weights[i] + 0.001*(Math.ceil(Math.random()*2)==1?1:-1);
+        this.weights[i] = parent.weights[i] + 0.001*(Math.ceil(Math.random()*2)==1?1:-1);
     }
 }
 
 function World (width, height, scale)
 {
+    this.generation = 1;
     this.scale = scale;
     this.width = width;
     this.height = height;
@@ -87,6 +97,7 @@ function World (width, height, scale)
 }
 World.prototype.populate = function(brain)
 {
+    this.generation++;
     this.hero = null;
     this.map = [];
     for (let x=0; x<this.width; x++)
@@ -98,7 +109,7 @@ World.prototype.populate = function(brain)
         }
     }    
     this.food = [];
-    for (let i=0; i<50; i++)
+    for (let i=0; i<100; i++)
     {
         point = this.place();
         if (point!=false)
@@ -112,15 +123,11 @@ World.prototype.populate = function(brain)
         point = this.place();
         if (point!=false)
         {
-            if (brain)
-            {
-                brain.mutate();
-            }
-            this.creatures.push(new Creature(this,i,point.x,point.y,brain));
+            this.creatures.push(new Creature(this,i,point.x,point.y,brain?brain.mutate():null));
         }
     }
     this.walls = [];
-    for (let i=0; i<150; i++)
+    for (let i=0; i<300; i++)
     {
         point = this.place();
         if (point!=false)
@@ -183,6 +190,7 @@ World.prototype.draw = function (view)
         }
         hero.hero = true;
         this.hero = true;
+        document.title = this.generation+" "+hero.points;
         this.populate(hero.brain);
     }
 }
@@ -202,7 +210,7 @@ Wall.prototype.alocate = function()
 }
 Wall.prototype.draw = function (view)
 {
-    view.fillStyle = "red";
+    view.fillStyle = "#181818";
     view.fillRect(this.x*this.world.scale,this.y*this.world.scale,1*this.world.scale,1*this.world.scale);    
 }
 
@@ -250,7 +258,7 @@ function Creature (world,index,x,y,brain)
     }
     else
     {
-        this.brain = new Network([48,2,4]);
+        this.brain = new Network([48,20,4]);
     }
     this.hero = false;
     this.alocate();
