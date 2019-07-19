@@ -98,7 +98,6 @@ World.prototype.populate = function(brain)
         }
     }    
     this.food = [];
-    this.creatures = [];
     for (let i=0; i<50; i++)
     {
         point = this.place();
@@ -107,7 +106,8 @@ World.prototype.populate = function(brain)
             this.food.push(new Food(this,i,point.x,point.y));
         }
     }
-    for (let i=0; i<3; i++)
+    this.creatures = [];
+    for (let i=0; i<50; i++)
     {
         point = this.place();
         if (point!=false)
@@ -119,6 +119,16 @@ World.prototype.populate = function(brain)
             this.creatures.push(new Creature(this,i,point.x,point.y,brain));
         }
     }
+    this.walls = [];
+    for (let i=0; i<150; i++)
+    {
+        point = this.place();
+        if (point!=false)
+        {
+            this.walls.push(new Wall(this,i,point.x,point.y));
+        }
+    }
+
 }
 World.prototype.place = function ()
 {
@@ -141,6 +151,10 @@ World.prototype.place = function ()
 World.prototype.draw = function (view)
 {
     view.clearRect(0, 0, this.width*this.scale, canvas.height*this.scale);
+    for (let i=0; i<this.walls.length; i++)
+    {
+        this.walls[i].draw(view);
+    }
     for (let i=0; i<this.food.length; i++)
     {
         this.food[i].draw(view);
@@ -173,6 +187,25 @@ World.prototype.draw = function (view)
     }
 }
 
+function Wall(world,index,x,y)
+{
+    this.index = index;
+    this.type = 1;
+    this.world = world;
+    this.x = x;
+    this.y = y;
+    this.alocate();
+}
+Wall.prototype.alocate = function()
+{
+    this.world.map[this.x][this.y] = this;
+}
+Wall.prototype.draw = function (view)
+{
+    view.fillStyle = "red";
+    view.fillRect(this.x*this.world.scale,this.y*this.world.scale,1*this.world.scale,1*this.world.scale);    
+}
+
 function Food(world,index,x,y)
 {
     this.alive = true;
@@ -196,7 +229,7 @@ Food.prototype.destroy = function()
 Food.prototype.draw = function (view)
 {
     //console.log ('drawing food at '+this.x+','+this.y);    
-    view.fillStyle = this.alive?"red":"yellow";
+    view.fillStyle = this.alive?"green":"yellow";
     view.fillRect(this.x*this.world.scale,this.y*this.world.scale,1*this.world.scale,1*this.world.scale);    
 }
 
@@ -210,7 +243,7 @@ function Creature (world,index,x,y,brain)
     this.world = world;
     this.x = x;
     this.y = y;
-    this.energy = 10;
+    this.energy = 20;
     if (brain)
     {
         this.brain = brain;
@@ -358,7 +391,7 @@ Creature.prototype.test = function (x,y)
     {
         return false;
     }
-    if (this.world.map[x][y]!=0 && this.world.map[x][y].type==3)
+    if (this.world.map[x][y]!=0 && (this.world.map[x][y].type==3 || this.world.map[x][y].type==1))
     {
         return false;
     }
