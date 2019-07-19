@@ -245,7 +245,12 @@ Food.prototype.draw = function (view)
 {
     //console.log ('drawing food at '+this.x+','+this.y);    
     view.fillStyle = this.alive?"green":"yellow";
-    view.fillRect(this.x*this.world.scale,this.y*this.world.scale,1*this.world.scale,1*this.world.scale);    
+    //view.fillRect(this.x*this.world.scale,this.y*this.world.scale,1*this.world.scale,1*this.world.scale);    
+
+    view.beginPath();
+    view.arc(this.x*this.world.scale+this.world.scale/2,this.y*this.world.scale+this.world.scale/2, this.world.scale/2, 0, 2 * Math.PI, false);
+    //ctx.fillStyle = "rgb(255, 0, 0)";
+    view.fill();    
 }
 
 
