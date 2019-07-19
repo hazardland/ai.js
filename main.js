@@ -258,7 +258,7 @@ function Creature (world,index,x,y,brain)
     this.world = world;
     this.x = x;
     this.y = y;
-    this.energy = 10;
+    this.energy = 30;
     if (brain)
     {
         //console.log (brain.layers[1][2].weights[20]);
