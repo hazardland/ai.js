@@ -130,7 +130,7 @@ World.prototype.populate = function(brain)
         point = this.place();
         if (point!=false)
         {
-            this.creatures.push(new Creature(this,i,point.x,point.y,brain && i<50?brain.mutate():null));
+            this.creatures.push(new Creature(this,i,point.x,point.y,brain?brain.mutate():null));
         }
     }
     this.walls = [];
@@ -266,7 +266,7 @@ function Creature (world,index,x,y,brain)
     }
     else
     {
-        this.brain = new Network([48,4]);
+        this.brain = new Network([48,5,5]);
     }
     this.hero = false;
     this.alocate();
