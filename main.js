@@ -125,16 +125,16 @@ World.prototype.populate = function(brain)
         }
     }
     this.creatures = [];
-    for (let i=0; i<200; i++)
+    for (let i=0; i<60; i++)
     {
         point = this.place();
         if (point!=false)
         {
-            this.creatures.push(new Creature(this,i,point.x,point.y,brain?brain.mutate():null));
+            this.creatures.push(new Creature(this,i,point.x,point.y,brain && i<50?brain.mutate():null));
         }
     }
     this.walls = [];
-    for (let i=0; i<150; i++)
+    for (let i=0; i<500; i++)
     {
         point = this.place();
         if (point!=false)
@@ -258,7 +258,7 @@ function Creature (world,index,x,y,brain)
     this.world = world;
     this.x = x;
     this.y = y;
-    this.energy = 30;
+    this.energy = 10;
     if (brain)
     {
         //console.log (brain.layers[1][2].weights[20]);
@@ -302,7 +302,7 @@ Creature.prototype.scan = function (x,y)
     y = this.yy (this.y+y);
     if (this.world.map[x][y]!=0)
     {
-        return this.world.map[x][y].type*5;
+        return this.world.map[x][y].type;
     }
     return 0;
 }
