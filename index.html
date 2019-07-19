@@ -1,6 +1,6 @@
 <title>World</title>
 <body style='background-color: black'>
-<canvas id="board" width="1800" height="900" style="border:1px solid lime;background-color:#000000">
+<canvas id="board" width="1820" height="900" style="border:1px solid lime;background-color:#000000">
 
 </canvas>
 <script src="./main.js"></script>
@@ -9,8 +9,13 @@ var canvas = document.getElementById("board");
 var board = canvas.getContext("2d");
 var world = new World(120,45,20);
 //world.draw(board);
+speed = 1;
 
-setInterval(function() {
+function draw ()
+{
     world.draw(board);
-}, 50);
+    setTimeout(draw, speed)
+}
+
+draw();
 </script>

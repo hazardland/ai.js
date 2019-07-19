@@ -83,7 +83,14 @@ Neuron.prototype.mutate = function (parent)
 {
     for (let i=0;i<this.weights.length;i++)
     {
-        this.weights[i] = parent.weights[i] + 0.001*(Math.ceil(Math.random()*2)==1?1:-1);
+        if (parent.weights[i] + 0.001>=1)
+        {
+            this.weights[i] = parent.weights[i]-0.001;
+        }
+        else
+        {
+            this.weights[i] = parent.weights[i] + 0.001*(Math.ceil(Math.random()*2)==1?1:-1);
+        }
     }
 }
 
@@ -109,7 +116,7 @@ World.prototype.populate = function(brain)
         }
     }    
     this.food = [];
-    for (let i=0; i<100; i++)
+    for (let i=0; i<50; i++)
     {
         point = this.place();
         if (point!=false)
@@ -118,7 +125,7 @@ World.prototype.populate = function(brain)
         }
     }
     this.creatures = [];
-    for (let i=0; i<50; i++)
+    for (let i=0; i<200; i++)
     {
         point = this.place();
         if (point!=false)
@@ -127,7 +134,7 @@ World.prototype.populate = function(brain)
         }
     }
     this.walls = [];
-    for (let i=0; i<300; i++)
+    for (let i=0; i<150; i++)
     {
         point = this.place();
         if (point!=false)
@@ -251,14 +258,15 @@ function Creature (world,index,x,y,brain)
     this.world = world;
     this.x = x;
     this.y = y;
-    this.energy = 20;
+    this.energy = 30;
     if (brain)
     {
+        //console.log (brain.layers[1][2].weights[20]);
         this.brain = brain;
     }
     else
     {
-        this.brain = new Network([48,20,4]);
+        this.brain = new Network([48,4]);
     }
     this.hero = false;
     this.alocate();
@@ -286,13 +294,15 @@ Creature.prototype.draw = function (view)
 }
 Creature.prototype.scan = function (x,y)
 {
-    if (this.x+x<0 || this.x+x>=this.world.width || this.y+y<0 || this.y+y>=this.world.height)
+    // if (this.x+x<0 || this.x+x>=this.world.width || this.y+y<0 || this.y+y>=this.world.height)
+    // {
+    //     return 1;
+    // }
+    x = this.xx (this.x+x);
+    y = this.yy (this.y+y);
+    if (this.world.map[x][y]!=0)
     {
-        return 1;
-    }
-    if (this.world.map[this.x+x][this.y+y]!=0)
-    {
-        return this.world.map[this.x+x][this.y+y].type;
+        return this.world.map[x][y].type*5;
     }
     return 0;
 }
@@ -368,16 +378,16 @@ Creature.prototype.move = function()
     {
         y = 1;
     }
-    if ((x!=0 || y!=0) && this.test (this.x+x, this.y+y))
+    if ((x!=0 || y!=0) && this.test (this.xx(this.x+x), this.yy(this.y+y)))
     {
         //console.log (this.index+"("+this.energy+") "+debug[action]);
-        if (this.food(this.x+x,this.y+y))
+        if (this.food(this.xx(this.x+x),this.yy(this.y+y)))
         {
-            this.eat(this.x+x,this.y+y);
+            this.eat(this.xx(this.x+x),this.yy(this.y+y));
         }
         this.world.map[this.x][this.y] = 0;
-        this.x = this.x+x;
-        this.y = this.y+y;
+        this.x = this.xx(this.x+x);
+        this.y = this.yy(this.y+y);
         this.points++;
         this.alocate();
     }
@@ -392,13 +402,37 @@ Creature.prototype.destroy = function()
     this.world.map[this.x][this.y] = 0;
     this.alive = false;
 }
+Creature.prototype.xx = function (x)
+{
+    if (x<0)
+    {
+        x = this.world.width-1;
+    }
+    if (x>=this.world.width)
+    {
+        x = 0;
+    }
+    return x;
+}
+Creature.prototype.yy = function (y)
+{
+    if (y<0)
+    {
+        y = this.world.height-1;
+    }
+    if (y>=this.world.height)
+    {
+        y = 0;
+    }
+    return y    
+}
 Creature.prototype.test = function (x,y)
 {
     //console.log ("testing at "+x+","+y);
-    if (x<0 || x>=this.world.width || y<0 || y>=this.world.height)
-    {
-        return false;
-    }
+    // if (x<0 || x>=this.world.width || y<0 || y>=this.world.height)
+    // {
+    //     return false;
+    // }
     if (this.world.map[x][y]!=0 && (this.world.map[x][y].type==3 || this.world.map[x][y].type==1))
     {
         return false;
