@@ -9,11 +9,23 @@ var canvas = document.getElementById("board");
 var board = canvas.getContext("2d");
 var world = new World(120,45,20);
 //world.draw(board);
-speed = 1;
+speed = 10;
+
+
 
 function draw ()
 {
-    world.draw(board);
+    if (world.generation<100 || world.generation>=10000)
+    {
+        world.draw(board);
+    }
+    else
+    {
+        while (world.generation<10000)
+        {
+            world.draw();
+        }        
+    }
     setTimeout(draw, speed)
 }
 
