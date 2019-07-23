@@ -1,6 +1,6 @@
 <title>World</title>
 <body style='background-color: black'>
-<canvas id="board" width="1820" height="900" style="border:1px solid lime;background-color:#000000">
+<canvas id="board" width="1840" height="940" style="border:1px solid lime;background-color:#000000">
 
 </canvas>
 <script src="./main.js"></script>
@@ -9,19 +9,19 @@ var canvas = document.getElementById("board");
 var board = canvas.getContext("2d");
 var world = new World(120,45,20);
 //world.draw(board);
-speed = 10;
+speed = 0;
 
 
 
 function draw ()
 {
-    if (world.generation<100 || world.generation>=10000)
+    if (world.generation<100 || world.generation>=1000)
     {
         world.draw(board);
     }
     else
     {
-        while (world.generation<10000)
+        while (world.generation<1000)
         {
             world.draw();
         }        
