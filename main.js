@@ -1,8 +1,6 @@
 /*
-    Perceptron
-    Things that matter:
-    1. Make very strict reward system even on first random generation choose the fittest based on your rules
-
+    emm it appears bias is connected also with weights with other neurons in next layer 
+    https://stackoverflow.com/questions/2480650/role-of-bias-in-neural-networks
 */
 
 function Network (layers)
@@ -53,7 +51,8 @@ function Neuron (layer)
 }
 Neuron.prototype.result = function result (layer)
 {
-    this.value = this.bias;
+    //this.value = this.bias;
+    this.value = 0;
     for (let neuron=0;neuron<layer.length;neuron++)
     {
         this.value += layer[neuron].value*this.weights[neuron];
