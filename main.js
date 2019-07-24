@@ -61,7 +61,7 @@ Neuron.prototype.result = function result (layer)
     this.value = 1/(1+Math.pow(Math.E, -this.value));
 }
 
-Network.prototype.mutate = function ()
+Network.prototype.mutate = function (rate)
 {
     //create clone
     let structure = [];
@@ -75,49 +75,54 @@ Network.prototype.mutate = function ()
     {
         for (let neuron=0; neuron<this.layers[layer].length; neuron++)
         {
-            clone.layers[layer][neuron].mutate(this.layers[layer][neuron]);
+            clone.layers[layer][neuron].mutate(this.layers[layer][neuron], rate);
         }
     }
     return clone;
 }
-Neuron.prototype.mutate = function (parent)
+Neuron.prototype.mutate = function (parent, rate)
 {
-    let delta = 0.1;
     for (let i=0;i<this.weights.length;i++)
     {
-        if (Math.ceil(Math.random()*2)==2)
+        if (false && Math.ceil(Math.random()*2)==2)
         {
             this.weights[i] = parent.weights[i];
 
         }
         else
         {
-            if (parent.weights[i] + delta>=1)
+            if (parent.weights[i] + rate>=1)
             {
-                this.weights[i] = parent.weights[i]-delta;
+                this.weights[i] = parent.weights[i]-rate;
             }
-            else if (parent.weights[i] + delta<=-1)
+            else if (parent.weights[i] + rate<=-1)
             {
-                this.weights[i] = parent.weights[i]+delta;
+                this.weights[i] = parent.weights[i]+rate;
             }    
             else
             {
-                this.weights[i] = parent.weights[i] + delta*(Math.ceil(Math.random()*2)==1?1:-1);
+                this.weights[i] = parent.weights[i] + rate*(Math.ceil(Math.random()*2)==1?1:-1);
             }
         }
     }
 }
 
-function World (width, height, scale)
+function World (config)
 {
+    this.config = config;
     this.generation = 1;
-    this.scale = scale;
-    this.width = width;
-    this.height = height;
-    this.populate();
+    this.scale = config.scale;
+    this.width = config.width;
+    this.height = config.height;
+    this.populate(this.load());
 }
 World.prototype.populate = function(brain)
 {
+    if (this.generation==1 && brain)
+    {
+        console.log(brain);
+        console.log("loaded brain "+brain.layers[1][17].weights[13]);
+    }
     this.generation++;
     this.hero = null;
     this.map = [];
@@ -132,13 +137,13 @@ World.prototype.populate = function(brain)
 
     point = this.place();
     this.creatures = [];
-    for (let i=0; i<500; i++)
+    for (let i=0; i<this.config.creature.count; i++)
     {
-        this.creatures.push(new Creature(this,i,point.x,point.y,brain?brain.mutate():null));
+        this.creatures.push(new Creature(this,i,point.x,point.y,brain?brain.mutate(this.config.brain.change):null));
     }
 
     this.food = [];
-    for (let i=0; i<50; i++)
+    for (let i=0; i<this.config.food.count; i++)
     {
         point = this.place();
         if (point!=false)
@@ -150,7 +155,7 @@ World.prototype.populate = function(brain)
     //if (!this.walls)
     //{
         this.walls = [];
-        for (let i=0; i<100; i++)
+        for (let i=0; i<this.config.wall.count; i++)
         {
             point = this.place();
             if (point!=false)
@@ -208,8 +213,9 @@ World.prototype.draw = function (view)
         {
             alive++;
             this.creatures[i].move();
+            this.creatures[i].draw(view);
         }
-        this.creatures[i].draw(view);
+        
     }
     let hero = null;
     if (alive==0 && !this.hero)
@@ -227,7 +233,8 @@ World.prototype.draw = function (view)
         {
             hero.hero = true;
             this.hero = true;
-            document.title = this.generation+" "+hero.dinners+" "+hero.curiosity;
+            this.save(hero.brain);
+            document.title = this.generation+" "+hero.dinners+" "+hero.curiosity+" "+hero.energy;
             this.populate(hero.brain);    
         }
         else
@@ -236,6 +243,23 @@ World.prototype.draw = function (view)
         }
     }
 }
+World.prototype.save = function (brain)
+{
+    //console.log("saved brain "+brain.layers[1][17].weights[13]);
+    localStorage.setItem (this.config.name, JSON.stringify(brain));
+}
+World.prototype.load = function ()
+{
+    string = localStorage.getItem(this.config.name);
+    if (!string)
+    {
+        return;
+    }
+    brain = JSON.parse(string);
+    brain.__proto__ = new Network(this.config.brain.structure);
+    return brain;
+}
+
 
 function Wall(world,index,x,y)
 {
@@ -268,7 +292,7 @@ function Food(world,index,x,y)
     this.world = world;
     this.x = x;
     this.y = y;
-    this.energy = 60;
+    this.energy = this.world.config.food.energy;
     this.alocate();
     this.eaten = 0;
 }
@@ -317,7 +341,8 @@ function Creature (world,index,x,y,brain)
     this.eaten = [];
     this.dinners = 0;
     this.path = [];
-    this.curiosity = 0; 
+    this.curiosity = 0;
+    this.laziness = 0;
     this.points = 0;
     this.alive = true;
     this.index = index;
@@ -325,7 +350,7 @@ function Creature (world,index,x,y,brain)
     this.world = world;
     this.x = x;
     this.y = y;
-    this.energy = 20;
+    this.energy = this.world.config.creature.energy;
     if (brain)
     {
         //console.log (brain.layers[1][2].weights[20]);
@@ -333,7 +358,7 @@ function Creature (world,index,x,y,brain)
     }
     else
     {
-        this.brain = new Network([48,96,4]);
+        this.brain = new Network(this.world.config.brain.structure);
     }
     this.hero = false;
     this.alocate();
@@ -474,7 +499,7 @@ Creature.prototype.move = function()
         this.destroy();
     }
     this.energy--;
-    if (this.energy<=0)
+    if (this.energy<=0 || this.laziness>this.world.config.creature.laziness)
     {
         this.destroy();
     }
@@ -554,6 +579,10 @@ Creature.prototype.log = function(x,y)
     {
         this.path[x][y] = true;
         this.curiosity++;
+    }
+    else
+    {
+        this.laziness++;
     }
 }
 Creature.prototype.score = function ()

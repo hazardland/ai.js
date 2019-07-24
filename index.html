@@ -1,32 +1,65 @@
-<title>World</title>
+<head>
+    <title>World</title>
+</head>
 <body style='background-color: black'>
-<canvas id="board" width="1800" height="900" style="border:1px solid lime;background-color:#000000">
-
-</canvas>
+    <canvas id='board'></canvas>
+</body>
 <script src="./main.js"></script>
 <script>
-var canvas = document.getElementById("board");
+
+var config = {
+    name: 'scaled7',
+    width: 7,
+    height: 7,
+    scale: 20,
+    speed: 0,
+    demo:100,
+    train:500,
+    creature: {
+        count: 500,
+        energy: 100,
+        laziness: 4
+
+    },
+    food: {
+        count:0,
+        energy: 100
+    },
+    wall: {
+        count:5
+    },
+    brain:{
+        structure: [48,48,4],
+        change: 0.01 
+    }
+};
+
+var canvas = document.getElementById('board');
+canvas.setAttribute('width', config.width*config.scale);
+canvas.setAttribute('height', config.height*config.scale);
+canvas.setAttribute('style', "border:1px solid lime;background-color:#000000");
+//var canvas = document.getElementById("board");
 var board = canvas.getContext("2d");
-var world = new World(90,45,20);
+var world = new World(config);
 //world.draw(board);
-speed = 0;
 
 
 
 function draw ()
 {
-    if (world.generation<100 || world.generation>=1000)
+    if (world.generation<config.demo || world.generation>=config.train)
     {
         world.draw(board);
     }
     else
     {
-        while (world.generation<1000)
+        while (world.generation<config.train)
         {
             world.draw();
-        }        
+        }
+        config.speed = 100;
     }
-    setTimeout(draw, speed)
+    setTimeout(draw, config.speed)
 }
 
 draw();
