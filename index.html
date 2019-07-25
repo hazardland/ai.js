@@ -4,20 +4,20 @@
 <body style='background-color: black'>
     <canvas id='board'></canvas>
 </body>
-<script src="./main.js"></script>
+<script src="./ai.js"></script>
 <script>
 
 var config = {
-    name: 'test1',
-    width: 10,
-    height: 10,
+    name: 'test2',
+    width: 50,
+    height: 30,
     scale: 20,
     speed: 0,
     demo:100,
-    train:2000,
+    train:20000,
     creature: {
         count: 500,
-        energy: 100,
+        energy: 400,
         laziness: 4
 
     },
@@ -26,7 +26,7 @@ var config = {
         energy: 100
     },
     wall: {
-        count:0
+        count:100
     },
     brain:{
         structure: [48,48,4],
@@ -49,13 +49,13 @@ function draw ()
 {
     if (world.generation<config.demo || world.generation>=config.train)
     {
-        world.draw(board);
+        world.run(board);
     }
     else
     {
         while (world.generation<config.train)
         {
-            world.draw();
+            world.run();
         }
         config.speed = 100;
     }
