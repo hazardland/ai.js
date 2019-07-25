@@ -1,8 +1,8 @@
-function Test()
+var a = 5;
+function test (a)
 {
-
+    a = 6;
 }
 
-test = new Test();
-
-console.log (typeof test);
+test(7);
+console.log(a);

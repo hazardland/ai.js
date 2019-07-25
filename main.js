@@ -8,16 +8,23 @@ function Network (layers)
     this.layers = [];
     for (let layer=0; layer<layers.length; layer++)
     {
-        this.layers[layer] = [];
-        for (let neuron=0; neuron<layers[layer]; neuron++)
+        this.layers[layer] = new Array(layer==layers.length-1?layers[layer]-1:layers[layer]);
+        for (let neuron=0; neuron<=layers[layer]; neuron++)
         {
-            this.layers[layer][neuron] = new Neuron((layer>0)?this.layers[layer-1]:null);
+            //if this is output(last) layer than we skip bias neuron
+            if (layer==layers.length-1 && neuron==layers[layer]) 
+            {
+                //console.log ("skip last");
+                break;
+            }
+            //create neuron and specify it if it is bias or not (bias is always last)
+            this.layers[layer][neuron] = new Neuron((layer>0)?this.layers[layer-1]:null,neuron==layers[layer]?true:false);
         }
     }
 }
 Network.prototype.result = function (input)
 {
-    for (let neuron=0; neuron<this.layers[0].length; neuron++)
+    for (let neuron=0; neuron<this.layers[0].length-1; neuron++)
     {
         this.layers[0][neuron].value = input[neuron];
     }
@@ -36,13 +43,12 @@ Network.prototype.result = function (input)
     return result;
 }
 
-function Neuron (layer)
+function Neuron (layer, bias)
 {
-    this.value = 0;
+    this.value = bias?1:0;
     if (layer)
     {
-        this.bias = 1;
-        this.weights = [];
+        this.weights = new Array(layer.length);
         for (let position=0; position<layer.length; position++)
         {
             this.weights[position] = Math.random()*(Math.ceil(Math.random()*2)==1?1:-1);
@@ -66,7 +72,7 @@ Network.prototype.mutate = function (rate)
     let structure = [];
     for (let layer=0;layer<this.layers.length;layer++)
     {
-        structure[layer] = this.layers[layer].length;
+        structure[layer] = layer<this.layers.length-1?this.layers[layer].length-1:this.layers[layer].length;
     }
     let clone = new Network(structure);
     //copy neurons
@@ -588,5 +594,7 @@ Creature.prototype.score = function ()
 {
     return (this.dinners+1)*(this.curiosity+1);
 }
-//const brain = new Network([4,6,2]);
-//console.log (brain.result ([1,5,3,4]));
+brain = new Network([1,1,1]);
+brain = brain.mutate(0.1).mutate(1);
+console.log (brain);
+console.log (JSON.stringify(brain));
