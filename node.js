@@ -1,16 +1,17 @@
-var ai = require ('./ai.js');
+var ai = require ('./lib/ai.js');
+var ai = require ('./lib/world.js');
 
 var config = {
-    name: 'test1',
+    name: 'final',
     width: 10,
     height: 10,
     scale: 20,
     speed: 0,
     demo:100,
-    train:20000,
+    train:200000,
     creature: {
         count: 500,
-        energy: 100,
+        energy: 400,
         laziness: 4
 
     },
@@ -19,11 +20,11 @@ var config = {
         energy: 100
     },
     wall: {
-        count:0
+        count:5
     },
     brain:{
-        structure: [48,48,4],
-        change: 0.01 
+        structure: [8,8,4],
+        change: 0.01
     }
 };
 
