@@ -15,34 +15,8 @@
 <script src="./lib/ai.js"></script>
 <script src="./lib/world.js"></script>
 <script src="./lib/debug.js"></script>
+<script src="./config.js"></script>
 <script>
-
-var config = {
-    name: 'expand6',
-    width: 10,
-    height: 10,
-    scale: 20,
-    speed: 0,
-    demo:500,
-    train:200000,
-    creature: {
-        count: 1000,
-        energy: 400,
-        laziness: 4
-
-    },
-    food: {
-        count:0,
-        energy: 100
-    },
-    wall: {
-        count:3
-    },
-    brain:{
-        structure: [8,6,4],
-        change: 0.01
-    }
-};
 
 var canvas = document.getElementById('board');
 canvas.setAttribute('width', config.width*config.scale);

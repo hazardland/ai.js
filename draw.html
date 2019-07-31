@@ -7,6 +7,7 @@
 
 <script src="./lib/ai.js"></script>
 <script src="./lib/debug.js"></script>
+<script src="./config.js"></script>
 <script>
 
 var canvas2 = document.getElementById('debug');
@@ -25,7 +26,7 @@ function load (name, structure)
 }
 
 setInterval(function(){
-    brain = load ('expand6',[8,6,4]);
+    brain = load (config.name,config.brain.structure);
     debug (brain,canvas2);
 }, 500);
 
