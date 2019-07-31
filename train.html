@@ -1,23 +1,32 @@
 <head>
     <title>World</title>
+    <style type="text/css">
+        canvas{
+            float:left;
+            margin-right: 100px;
+            padding: 0px;
+        }
+    </style>
 </head>
 <body style='background-color: black'>
     <canvas id='board'></canvas>
+    <canvas id='debug'></canvas>
 </body>
 <script src="./lib/ai.js"></script>
 <script src="./lib/world.js"></script>
+<script src="./lib/debug.js"></script>
 <script>
 
 var config = {
-    name: 'expand4',
+    name: 'expand6',
     width: 10,
     height: 10,
     scale: 20,
     speed: 0,
-    demo:100,
+    demo:500,
     train:200000,
     creature: {
-        count: 500,
+        count: 1000,
         energy: 400,
         laziness: 4
 
@@ -27,7 +36,7 @@ var config = {
         energy: 100
     },
     wall: {
-        count:0
+        count:3
     },
     brain:{
         structure: [8,6,4],
@@ -45,6 +54,14 @@ var world = new World(config);
 //world.draw(board);
 
 
+var canvas_debug = document.getElementById('debug');
+
+
+World.prototype.debug = function (brain)
+{
+    //brain = new Network([2,2]);
+    //debug (brain,canvas_debug);
+};
 
 function draw ()
 {

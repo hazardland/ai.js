@@ -2,19 +2,15 @@
     <title>Network</title>
 </head>
 <body style='background-color: black'>
-    <canvas id='board'></canvas>
+    <canvas id='debug'></canvas>
 </body>
+
 <script src="./lib/ai.js"></script>
+<script src="./lib/debug.js"></script>
 <script>
 
-var canvas = document.getElementById('board');
-canvas.setAttribute('width', 1000);
-canvas.setAttribute('height', 600);
-//canvas.setAttribute('style', "border:1px solid lime;background-color:#000000");
-//var canvas = document.getElementById("board");
-var view = canvas.getContext("2d");
-
-//var brain = new Network([8,8,8,4]);
+var canvas2 = document.getElementById('debug');
+//canvas2.setAttribute('style', "border:1px solid lime;background-color:#000000");
 
 function load (name, structure)
 {
@@ -28,123 +24,9 @@ function load (name, structure)
     return brain;
 }
 
-
-//console.log(brain);
-
-
-function draw (brain)
-{
-
-    var config = {
-        padding: 50,
-        radius: 12,
-        left: 120,
-        bottom: 50,
-        max: 0,
-        glow: 1,
-        bold: 0.8 //when to change line color
-    };
-
-
-    function center(row, column, height)
-    {
-        return {x:config.padding+column*config.left-config.radius, y:config.padding+((config.max-height)/2)*config.bottom+row*config.bottom-config.radius};
-    }
-
-    for (column=0; column<brain.layers.length; column++)
-    {
-        if (brain.layers[column].length>config.max)
-        {
-            config.max = brain.layers[column].length;
-        }
-    }
-
-    for (column=0; column<brain.layers.length; column++)
-    {
-        for (row=0; row<brain.layers[column].length; row++)
-        {
-            height = brain.layers[column].length;
-            point = center(row,column,height);
-            if (column>=1)
-            {
-                for (neuron=0; neuron<brain.layers[column][row].weights.length; neuron++)
-                {
-                    height = brain.layers[column-1].length;
-                    from = center(neuron,column-1,height);
-                    view.beginPath();
-                    view.moveTo(point.x-config.radius/2, point.y);
-                    view.lineTo(from.x+config.radius/2, from.y);
-                    weight = brain.layers[column][row].weights[neuron];
-                    width = weight/config.glow+0.0000001;
-                    width = width<0?(-1*width):width;
-                    view.lineWidth = width;
-                    if (weight>=config.bold)
-                    {
-                        color = 'yellow';
-                    }
-                    else if (weight<=-1*config.bold)
-                    {
-                        color = 'red';
-                    }
-                    else
-                    {
-                        color = '#514747';
-                    }
-                    view.strokeStyle = color;
-                    //console.log(weight+" "+width+" "+color);
-                    view.stroke();
-                }
-            }
-        }
-    }
-
-
-    for (column=0; column<brain.layers.length; column++)
-    {
-        for (row=0; row<brain.layers[column].length; row++)
-        {
-            height = brain.layers[column].length;
-            point = center(row,column,height);
-
-                    weight = brain.layers[column][row].value;
-                    if (weight>1) weight = 1;
-                    if (weight<-1) weight = -1;
-                    width = weight/0.2+0.0000001;
-                    width = width<0?(-1*width):width;
-                    width = width<0.7?0.7:width;
-                    view.lineWidth = width;
-                    if (weight>=config.bold)
-                    {
-                        color = 'yellow';
-                    }
-                    else if (weight<=-1*config.bold)
-                    {
-                        color = 'red';
-                    }
-                    else
-                    {
-                        color = '#514747';
-                    }
-
-            view.beginPath();
-            view.arc(point.x, point.y, config.radius, 0, 2 * Math.PI, false);
-            view.lineWidth = width;
-            view.strokeStyle= color;
-            view.stroke();
-
-            view.beginPath();
-            view.arc(point.x, point.y, config.radius-width/2, 0, 2 * Math.PI, false);
-            view.fill();
-        }
-    }
-}
-
-
-
 setInterval(function(){
-    view.clearRect(0, 0, 1000, 600);
-    brain = load ('expand4',[8,6,4]);
-    draw (brain);
+    brain = load ('expand6',[8,6,4]);
+    debug (brain,canvas2);
 }, 500);
 
 
