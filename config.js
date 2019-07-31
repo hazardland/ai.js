@@ -21,6 +21,6 @@ var config = {
     },
     brain:{
         structure: [8,4],
-        change: 0.1
+        change: 0.01
     }
 };
