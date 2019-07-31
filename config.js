@@ -1,15 +1,15 @@
 var config = {
-    name: 'fast1',
-    width: 10,
-    height: 10,
+    name: 'memory_chart_re',
+    width: 40,
+    height: 30,
     scale: 20,
     speed: 0,
     demo:500,
     train:200000,
     creature: {
         count: 1000,
-        energy: 400,
-        laziness: 4
+        energy: 1200,
+        laziness: 5
 
     },
     food: {
@@ -17,10 +17,10 @@ var config = {
         energy: 100
     },
     wall: {
-        count:3
+        count:150
     },
     brain:{
-        structure: [8,4],
-        change: 0.01
+        structure: [12,4,4],
+        change: 0.1
     }
 };

@@ -1,8 +1,16 @@
 <head>
     <title>Network</title>
+    <style type="text/css">
+        canvas{
+            float:left;
+            margin-right: 100px;
+            padding: 0px;
+        }
+    </style>
 </head>
 <body style='background-color: black'>
     <canvas id='debug'></canvas>
+    <canvas id='chart'></canvas>
 </body>
 
 <script src="./lib/ai.js"></script>
@@ -11,7 +19,9 @@
 <script>
 
 var canvas2 = document.getElementById('debug');
-//canvas2.setAttribute('style', "border:1px solid lime;background-color:#000000");
+var canvas3 = document.getElementById('chart');
+canvas3.setAttribute('style', "border:1px solid #514747;background-color:#000000");
+var points = new Array();
 
 function load (name, structure)
 {
@@ -25,9 +35,47 @@ function load (name, structure)
     return brain;
 }
 
+
+
+function chart (name, canvas, width, height, max)
+{
+    ratio = max/height;
+    scale = 5;
+    width = scale*width;
+    string = localStorage.getItem(name+".stats");
+    if (!string) return;
+    stats = JSON.parse(string);
+
+    //console.log (points);
+    points.push(stats.score);
+    if (points.length>width/scale)
+    {
+        points.shift();
+    }
+
+    canvas.setAttribute('width', width);
+    canvas.setAttribute('height', height);
+
+    let view = canvas.getContext("2d");
+    view.clearRect(0, 0, width*scale, height);
+
+    for (let i=0; i<points.length; i++)
+    {
+        x = i*scale;
+        y = points[i];
+        view.beginPath();
+        view.moveTo(x, height-y/ratio);
+        view.lineTo((i-1)*scale, height-points[i-1]/ratio);
+        view.strokeStyle = "red";
+        view.lineWidth = 2;
+        view.stroke();
+    }
+}
+
 setInterval(function(){
     brain = load (config.name,config.brain.structure);
     debug (brain,canvas2);
+    chart (config.name, canvas3, 200, 300, config.width*config.height);
 }, 500);
 
 
