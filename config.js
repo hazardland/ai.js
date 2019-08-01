@@ -1,26 +1,35 @@
 var config = {
-    name: 'memory_chart_re',
-    width: 40,
+    name: 'mem_step_52',
+    width: 60,
     height: 30,
     scale: 20,
     speed: 0,
     demo:500,
     train:200000,
+    goal: 800,
+    borders:false,
+
     creature: {
+        type: 3,
         count: 1000,
-        energy: 1200,
+        energy: 30,
         laziness: 5
 
     },
+
     food: {
-        count:0,
-        energy: 100
+        type: 2,
+        count:30,
+        energy: 30
     },
+
     wall: {
-        count:150
+        type:1,
+        count:30
     },
+
     brain:{
-        structure: [12,4,4],
+        structure: [52,4,4],
         change: 0.1
     }
 };
