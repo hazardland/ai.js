@@ -1,5 +1,5 @@
 var config = {
-    name: 'mem_step_52',
+    name: 'submarine_11',
     width: 60,
     height: 30,
     scale: 20,
@@ -11,25 +11,26 @@ var config = {
 
     creature: {
         type: 3,
-        count: 1000,
+        count: 500,
         energy: 30,
-        laziness: 5
+        laziness: 5,
+        vision: 10
 
     },
 
     food: {
         type: 2,
-        count:30,
+        count:50,
         energy: 30
     },
 
     wall: {
         type:1,
-        count:30
+        count:50
     },
 
     brain:{
-        structure: [52,4,4],
+        structure: [12,4,4],
         change: 0.1
     }
 };

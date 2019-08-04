@@ -39,13 +39,17 @@ World.prototype.debug = function (brain)
 
 function draw ()
 {
-    if (world.generation<config.demo || world.generation>=config.train)
+    if (world.generation<config.demo || world.generation>=config.train || world.trained)
     {
+        if (world.trained)
+        {
+            config.speed = 100;
+        }
         world.run(board);
     }
     else
     {
-        while (world.generation<config.train)
+        while (world.generation<config.train && !world.trained)
         {
             world.run();
         }
