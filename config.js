@@ -1,5 +1,5 @@
 var config = {
-    name: 'submarine_11',
+    name: 'submarine_short_short_1',
     width: 60,
     height: 30,
     scale: 20,
@@ -11,7 +11,7 @@ var config = {
 
     creature: {
         type: 3,
-        count: 500,
+        count: 250,
         energy: 30,
         laziness: 5,
         vision: 10
@@ -26,11 +26,11 @@ var config = {
 
     wall: {
         type:1,
-        count:50
+        count:100
     },
 
     brain:{
-        structure: [12,4,4],
-        change: 0.1
+        structure: [12,4],
+        change: 0.05
     }
 };
