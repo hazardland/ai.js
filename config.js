@@ -1,12 +1,12 @@
 var config = {
-    name: 'vision_inverse_2',
+    name: 'vision_inverse_4',
     width: 30,
     height: 30,
     scale: 20,
     speed: 0,
     demo:500,
     train:200000,
-    goal: 620,
+    goal: 20,
     borders:true,
 
     creature: {
