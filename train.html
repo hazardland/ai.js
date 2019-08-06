@@ -29,12 +29,29 @@ var world = new World(config);
 
 
 var canvas_debug = document.getElementById('debug');
+var titles = {
+    input: {
+        0: "x1",
+        1: "y1",
+        2: "x2",
+        3: "y2",
+        4: "wall left",
+        5: "wall right",
+        6: "wall up",
+        7: "wall down",
+        8: "food left",
+        9: "food right",
+        10: "food up",
+        11: "food down",
+        12: "bias"
+    }
+};
 
 
 World.prototype.debug = function (brain)
 {
     //brain = new Network([2,2]);
-    debug (brain,canvas_debug);
+    debug (brain,canvas_debug,titles);
 };
 
 function draw ()

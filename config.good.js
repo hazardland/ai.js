@@ -1,12 +1,12 @@
 var config = {
-    name: 'vision_inverse_2',
+    name: 'vision_inverse_1',
     width: 30,
     height: 30,
     scale: 20,
     speed: 0,
     demo:500,
     train:200000,
-    goal: 620,
+    goal: 800,
     borders:true,
 
     creature: {
@@ -30,7 +30,7 @@ var config = {
     },
 
     brain:{
-        structure: [12,4,4],
+        structure: [12,4],
         change: 0.1
     }
 };
