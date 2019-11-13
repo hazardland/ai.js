@@ -1,3 +1,3 @@
-Training AI to avoid walls and blocks and travel on every free pixel but still I have no idea what I am doing.
+My first javascript AI library trains little squares to avoid walls eat food circles and explore world
 
 ![alt text](./doc/screen.gif)
